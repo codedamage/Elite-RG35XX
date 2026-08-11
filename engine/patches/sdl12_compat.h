@@ -20,6 +20,32 @@ typedef SDL_Surface SDL_Renderer;
 typedef SDL_Surface SDL_Texture;
 typedef struct SDL_Window SDL_Window;   /* opaque; only size is used */
 typedef int SDL_Keycode;
+typedef int SDL_AudioDeviceID;
+
+/* --- SDL2 enums/flags the fork uses -> harmless constants under 1.2 --- */
+#define SDL_WINDOWPOS_UNDEFINED     0
+#define SDL_WINDOW_SHOWN            0
+#define SDL_WINDOW_RESIZABLE        0
+#define SDL_WINDOW_INPUT_FOCUS      0
+#define SDL_WINDOW_FULLSCREEN       0
+#define SDL_TEXTUREACCESS_STATIC    0
+#define SDL_TEXTUREACCESS_STREAMING 1
+#define SDL_TEXTUREACCESS_TARGET    2
+#define SDL_PIXELFORMAT_ARGB8888    0    /* sentinel; shim always builds ARGB8888 */
+#define SDL_DestroyWindow(w)        ((void)0)
+#define SDL_DestroyRenderer(r)      ((void)0)
+
+/* ARGB8888 channel masks (little-endian pixel 0xAARRGGBB) — used by the shim .c */
+#define SHIM_AMASK 0xFF000000u
+#define SHIM_RMASK 0x00FF0000u
+#define SHIM_GMASK 0x0000FF00u
+#define SHIM_BMASK 0x000000FFu
+
+/* SDL_AllocFormat/SDL_FreeFormat: no direct 1.2 equivalent -> shim (impl in .c) */
+SDL_PixelFormat *SDLc_AllocFormat(Uint32 fmt);
+void             SDLc_FreeFormat(SDL_PixelFormat *f);
+#define SDL_AllocFormat  SDLc_AllocFormat
+#define SDL_FreeFormat   SDLc_FreeFormat
 
 /* --- Blend modes: enum kept for source compatibility (mostly informational) --- */
 typedef enum { SDL_BLENDMODE_NONE=0, SDL_BLENDMODE_BLEND=1,

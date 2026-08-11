@@ -13,6 +13,18 @@ static Uint8 g_r=0, g_g=0, g_b=0, g_a=255;
 static Uint32 rgba(void){ return ((Uint32)g_r<<24)|((Uint32)g_g<<16)|((Uint32)g_b<<8)|g_a; }
 static SDL_Surface *cur(void){ return g_target ? g_target : g_screen; }
 
+/* SDL_AllocFormat shim: 1.2 has no format allocator. Keep one ARGB8888 format alive
+ * via a 1x1 holder surface and hand out its ->format. */
+static SDL_Surface *s_fmt_holder = NULL;
+SDL_PixelFormat *SDLc_AllocFormat(Uint32 fmt){
+    (void)fmt;
+    if(!s_fmt_holder)
+        s_fmt_holder = SDL_CreateRGBSurface(SDL_SWSURFACE,1,1,32,
+                        SHIM_RMASK,SHIM_GMASK,SHIM_BMASK,SHIM_AMASK);
+    return s_fmt_holder ? s_fmt_holder->format : NULL;
+}
+void SDLc_FreeFormat(SDL_PixelFormat *f){ (void)f; /* holder released at SDL_Quit */ }
+
 SDL_Window *SDLc_CreateWindow(const char *t,int x,int y,int w,int h,Uint32 f){
     (void)t;(void)x;(void)y;(void)f;
     g_logical_w=w; g_logical_h=h;
@@ -33,7 +45,7 @@ int SDLc_RenderSetLogicalSize(SDL_Renderer *r,int w,int h){
 SDL_Texture *SDLc_CreateTexture(SDL_Renderer *r,Uint32 fmt,int access,int w,int h){
     (void)r;(void)fmt;(void)access;
     return SDL_CreateRGBSurface(SDL_SWSURFACE,w,h,32,
-                                0xFF000000,0x00FF0000,0x0000FF00,0x000000FF);
+                                SHIM_RMASK,SHIM_GMASK,SHIM_BMASK,SHIM_AMASK);
 }
 
 SDL_Texture *SDLc_CreateTextureFromSurface(SDL_Renderer *r,SDL_Surface *s){
@@ -63,11 +75,27 @@ int SDLc_RenderClear(SDL_Renderer *r){
 }
 
 int SDLc_RenderCopy(SDL_Renderer *r,SDL_Texture *t,const SDL_Rect *src,const SDL_Rect *dst){
-    SDL_Surface *d=cur(); SDL_Rect s2,d2; (void)r;
+    SDL_Surface *d=cur(); (void)r;
     if(!t) return -1;
-    if(src){s2=*src;} if(dst){d2=*dst;}
-    /* TODO: if dst size != src size, zoomSurface(t, sx, sy, ...) then blit (task 04/05). */
-    return SDL_BlitSurface(t, src?&s2:NULL, d, dst?&d2:NULL);
+    int sw = src ? src->w : t->w;
+    int sh = src ? src->h : t->h;
+    int dw = dst ? dst->w : d->w;
+    int dh = dst ? dst->h : d->h;
+
+    if(sw==dw && sh==dh){                       /* fast path: 1:1 blit */
+        SDL_Rect s2, d2;
+        if(src) s2=*src;
+        if(dst) d2=*dst;
+        return SDL_BlitSurface(t, src?&s2:NULL, d, dst?&d2:NULL);
+    }
+    /* scaled path (e.g. present: SCREEN_WxSCREEN_H texture -> 640x480 screen).
+     * zoomSurface scales the whole surface; the fork's scaled copies use src=NULL. */
+    SDL_Surface *z = zoomSurface(t, (double)dw/sw, (double)dh/sh, SMOOTHING_OFF);
+    if(!z) return -1;
+    SDL_Rect d2; d2.x = dst?dst->x:0; d2.y = dst?dst->y:0; d2.w=0; d2.h=0;
+    int rc = SDL_BlitSurface(z, NULL, d, &d2);
+    SDL_FreeSurface(z);
+    return rc;
 }
 
 int SDLc_RenderDrawLine(SDL_Renderer *r,int x1,int y1,int x2,int y2){

@@ -18,6 +18,12 @@ fi
 # 2. Stage the shim next to the sources
 cp "$PATCHES/sdl12_compat.h" "$PATCHES/sdl12_compat.c" "$ENGINE/"
 
+# 2b. Redirect the fork's bundled SDL2 gfx headers to the on-device SDL 1.2 gfx,
+#     so `#include "SDL2_gfxPrimitives.h"` in the sources resolves to SDL_gfx 1.2.
+printf '#include "SDL_gfxPrimitives.h"\n' > "$ENGINE/SDL2_gfxPrimitives.h"
+printf '#include "SDL_rotozoom.h"\n'      > "$ENGINE/SDL2_rotozoom.h"
+: > "$ENGINE/SDL2_gfxPrimitives_font.h"   # font funcs come from the SDL 1.2 gfx header
+
 cd "$ENGINE"
 
 # 3. Compile: drop the bundled SDL2 gfx sources, add our shim, force-include it.

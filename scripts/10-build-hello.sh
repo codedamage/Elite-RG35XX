@@ -17,5 +17,6 @@ echo "CC     = $CC"
 echo "Built: $OUT_DIR/hello"
 sh "$ROOT/scripts/check-abi.sh" "$OUT_DIR/hello" || true
 echo
-echo "Next: copy port/Elite/ to the SD card's Roms/PORTS/, launch via Garlic -> Ports,"
-echo "then check that hello.log appears next to the binary."
+echo "Next: copy BOTH  port/Elite.sh  AND  port/Elite/  into the SD card's Roms/PORTS/"
+echo "(the .sh sits at PORTS root = the menu entry; the folder holds the binary)."
+echo "Launch 'Elite' via Garlic -> Ports, then check hello.log inside the Elite/ folder."

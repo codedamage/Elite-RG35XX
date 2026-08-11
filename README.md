@@ -26,4 +26,5 @@ Elite © Bell & Braben. *The New Kind* is a fan reimplementation with a murky hi
 that isn't clearly free.
 
 ## Status
-🟡 Planning. See MASTER + tasks.
+🟢 **Pipeline proven on hardware** (task 02 ✅ — `hello` cross-built and ran on the device).
+Next: task 04 — build the SDL 1.2-backported engine. See MASTER + tasks.
