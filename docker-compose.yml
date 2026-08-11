@@ -1,0 +1,32 @@
+# Containerized cross-build for the original RG35XX (GarlicOS / Miyoo uClibc).
+# Prebuilt MiyooCFW toolchain (arm-miyoo-linux-uclibcgnueabi, armv5te / uClibc / soft-float).
+# Run from the repo root in Windows PowerShell (Docker Desktop running) — no WSL needed:
+#
+#   docker compose run --rm hello      # cross-compile scripts/hello.c -> port/Elite/hello
+#   docker compose run --rm engine     # clone + backport + build newkind -> port/Elite/EliteTNK
+#   docker compose run --rm shell      # interactive toolchain shell
+#
+# Repo mounts at /src; outputs land back in the working folder.
+
+x-toolchain: &toolchain
+  image: miyoocfw/toolchain-shared-uclibc:docker
+  working_dir: /src
+  volumes:
+    - .:/src
+  # If the base image lacks git/autoconf/cmake for the engine build, add a Dockerfile
+  # (extend the image + apt-get build tools) and replace `image:` with `build: .`.
+
+services:
+  shell:
+    <<: *toolchain
+    stdin_open: true
+    tty: true
+    command: ["/bin/bash"]
+
+  hello:
+    <<: *toolchain
+    command: ["bash", "scripts/10-build-hello.sh"]
+
+  engine:
+    <<: *toolchain
+    command: ["bash", "scripts/30-build-engine.sh"]

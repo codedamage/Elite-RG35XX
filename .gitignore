@@ -1,0 +1,30 @@
+# --- Cross-compile artifacts ---
+deps/build/
+deps/sysroot/
+engine/**/build/
+engine/*/           # cloned engine source (keep out of our repo)
+*.o
+*.a
+*.so
+*.so.*
+*.elf
+
+# --- Toolchain ---
+toolchain/
+*.tar.gz
+*.tar.xz
+
+# --- Built port binary (rebuildable) ---
+port/Elite/EliteTNK
+port/Elite/hello
+
+# --- Device logs / runtime / saves ---
+port/**/log.txt
+port/**/*.log
+port/**/save/
+*.log
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+/tasks
