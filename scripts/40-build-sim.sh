@@ -14,13 +14,15 @@ mkdir -p "$SIMDIR"; rm -f "$SIMDIR"/*.bmp "$SIMDIR"/*.png 2>/dev/null || true
 # 1. Source (reuse the clone made by the device build; clone if missing)
 [ -d "$ENGINE" ] || git clone --depth 1 https://github.com/lgblgblgb/newkind "$ENGINE"
 
-# 2. Stage shim + neutralize bundled SDL2 gfx headers + source tweaks (same as device build)
-cp "$PATCHES/sdl12_compat.h" "$PATCHES/sdl12_compat.c" "$ENGINE/"
-printf '#include "SDL_gfxPrimitives.h"\n' > "$ENGINE/SDL2_gfxPrimitives.h"
-printf '#include "SDL_rotozoom.h"\n'      > "$ENGINE/SDL2_rotozoom.h"
-: > "$ENGINE/SDL2_gfxPrimitives_font.h"
+# 2. Start from a pristine fork (drop any tweaks from previous/device builds), then stage.
 cd "$ENGINE"
+git checkout -- . 2>/dev/null || true
+cp "$PATCHES/sdl12_compat.h" "$PATCHES/sdl12_compat.c" .
+printf '#include "SDL_gfxPrimitives.h"\n' > SDL2_gfxPrimitives.h
+printf '#include "SDL_rotozoom.h"\n'      > SDL2_rotozoom.h
+: > SDL2_gfxPrimitives_font.h
 sed -i 's/event\.key\.repeat/0/g' *.c
+sed -i '/puts("gfx_update_screen() is called!")/d' sdl.c
 [ -f data/datafile.sh ] && bash data/datafile.sh > datafilebank.c
 
 # Aspect ratio: render at 800x600 (4:3) so it scales to 640x480 (4:3) as a clean

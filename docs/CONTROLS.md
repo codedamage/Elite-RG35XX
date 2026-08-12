@@ -1,58 +1,49 @@
-# RG35XX Control Scheme (DRAFT)
+# RG35XX Control Scheme (final)
 
-Elite has ~30 actions; the RG35XX has ~10 buttons + D-pad. Solution: a **base flight
-layer** plus two **modifier layers** (hold Select / hold Start). Final button *indices*
-come from `InputProbe` (`docs`/`probe.log`); the labels below (A/B/X/Y/L/R) are what we
-map once we know which SDL index each physical button is.
+Confirmed "RG35XX Gamepad" indices: D-pad = HAT 0 (U/R/D/L = 1/2/4/8);
+**A=0, B=1, X=2, Y=3, L1=5, R1=6, Select=7, Start=8, Menu=9**; **L2/R2 = analog axes 2/5**.
+Implemented in `engine/patches/sdl12_compat.c` (joystick → synthetic keyboard, no game changes).
+Momentary actions are held a few frames so the game's poll can't swallow them.
 
-## Base layer (no modifier) — flight
-| RG35XX | Elite key | Action |
+## Base layer — flight
+| RG35XX | Elite | Action |
 |---|---|---|
-| D-pad Up / Down | s / x (or ↑/↓) | Pitch |
-| D-pad Left / Right | , / . (or ←/→) | Roll |
-| A | a | Fire laser |
-| R (shoulder) | Space | Accelerate |
-| L (shoulder) | / | Decelerate |
-| B | j | In-system jump |
-| Y | h | Hyperspace |
-| X | e | ECM |
-| Start (tap) | p / r | Pause / resume |
+| D-pad U/D | ↑/↓ | Pitch |
+| D-pad L/R | ←/→ | Roll |
+| A | a | Fire |
+| B / R1 / R2 | Space | Accelerate |
+| L1 / L2 | / | Decelerate |
+| X | n | *Intro: new commander* (idle in flight) |
+| Y | y | *Intro: load commander* |
+| Menu | p | Pause / resume |
 
-## Hold **Select** — views & screens (F1–F11)
-| Select + | Elite | Screen |
+## Hold **Select** — views & screens
+| Select + | Elite | |
 |---|---|---|
-| D-pad Up | F1 | Front view / **Launch** (when docked) |
-| D-pad Down | F2 | Rear view |
-| D-pad Left | F3 | Left view |
-| D-pad Right | F4 | Right view |
-| A | F5 | Galactic chart |
-| B | F6 | Local chart |
-| X | F7 | System data |
-| Y | F8 | Market prices |
-| L | F9 | Status / commander |
-| R | F10 | Inventory |
-| Start | F11 | Options |
+| Up | F1 | Front view / **Launch (docked)** |
+| Down / Left / Right | F2 / F3 / F4 | Rear / Left / Right view |
+| A / B | F5 / F6 | Galactic / Local chart |
+| X / Y | F7 / F8 | System data / Market |
+| R1 / L1 | F9 / F10 | Status / Inventory |
 
 ## Hold **Start** — combat & utility
 | Start + | Elite | Action |
 |---|---|---|
-| A | t | Target missile |
-| B | m | Fire missile |
+| A | m | Fire missile |
+| B | t | Target missile |
 | X | u | Un-arm missile |
-| Y | Tab | Energy bomb |
-| L | c | Docking computer |
-| R | z | Scanner zoom |
-
-## Menus / prompts
-- **Yes / No** prompts (`y`/`n`): A = Yes, B = No.
-- **Chart cursor / text entry**: D-pad moves cursor; A = Enter; B = Backspace.
-- Commander-name entry (rare): deferred — may add an on-screen keyboard later.
+| Y | e | ECM |
+| R1 | h | Hyperspace |
+| L1 | j | In-system jump |
+| Up | Tab | Energy bomb |
+| Down | c | Docking computer |
+| Left | z | Scanner zoom |
+| Right | F11 | Options |
 
 ## System
-- **Quit to Garlic**: hold **Select + Start** together (~1s).
+- **Quit**: GarlicOS menu (SIGTERM handled → clean exit).
 
-## Notes
-- New commander at first launch: intro-1 asks Y/N → **A** (Yes) or **B** (No).
-- Intro-2 "Press Fire or Space" → **A** or **R**.
-- Implemented in the shim's joystick→keyboard layer (`sdl12_compat.c`) with modifier-hold
-  state; nothing in the game itself changes.
+## First run
+1. Intro-1 "Load commander? Y/N" → **X** (new) / **Y** (load).
+2. Intro-2 "Press Fire or Space" → **B**.
+3. Docked → **Select + Up** to launch, then fly.

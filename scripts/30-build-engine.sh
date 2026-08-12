@@ -15,23 +15,26 @@ if [ ! -d "$ENGINE" ]; then
   git clone --depth 1 https://github.com/lgblgblgb/newkind "$ENGINE"
 fi
 
-# 2. Stage the shim next to the sources
-cp "$PATCHES/sdl12_compat.h" "$PATCHES/sdl12_compat.c" "$ENGINE/"
-
-# 2b. Redirect the fork's bundled SDL2 gfx headers to the on-device SDL 1.2 gfx,
-#     so `#include "SDL2_gfxPrimitives.h"` in the sources resolves to SDL_gfx 1.2.
-printf '#include "SDL_gfxPrimitives.h"\n' > "$ENGINE/SDL2_gfxPrimitives.h"
-printf '#include "SDL_rotozoom.h"\n'      > "$ENGINE/SDL2_rotozoom.h"
-: > "$ENGINE/SDL2_gfxPrimitives_font.h"   # font funcs come from the SDL 1.2 gfx header
-
 cd "$ENGINE"
 
-# 2c. Source tweaks that can't be macro'd:
-#     SDL 1.2's SDL_KeyboardEvent has no 'repeat' field -> treat every keydown as fresh.
-sed -i 's/event\.key\.repeat/0/g' *.c
+# 2a. Reset the fork's tracked sources to pristine so tweaks from OTHER builds (e.g. the
+#     sim's DBG-KBD/DBG-STATE) never leak into the device binary. Shim + generated files
+#     are untracked and survive.
+git checkout -- . 2>/dev/null || true
 
-# 2d. Generate the embedded data bank (bmp/wav -> C arrays). The fork links
-#     datafile_filenames/_sizes/_storage from this GENERATED file (not in git).
+# 2b. Stage the shim next to the sources.
+cp "$PATCHES/sdl12_compat.h" "$PATCHES/sdl12_compat.c" .
+
+# 2c. Redirect the fork's bundled SDL2 gfx headers to the on-device SDL 1.2 gfx.
+printf '#include "SDL_gfxPrimitives.h"\n' > SDL2_gfxPrimitives.h
+printf '#include "SDL_rotozoom.h"\n'      > SDL2_rotozoom.h
+: > SDL2_gfxPrimitives_font.h
+
+# 2d. Source tweaks:
+sed -i 's/event\.key\.repeat/0/g' *.c                            # no 'repeat' field in SDL 1.2
+sed -i '/puts("gfx_update_screen() is called!")/d' sdl.c         # per-frame log I/O = slow
+
+# 2e. Embedded data bank (bmp/wav -> C arrays; not in git).
 if [ -f data/datafile.sh ]; then
   bash data/datafile.sh > datafilebank.c
   echo "Generated datafilebank.c ($(wc -c < datafilebank.c) bytes)"
@@ -39,8 +42,7 @@ else
   echo "WARN: data/datafile.sh not found - datafilebank.c cannot be generated"
 fi
 
-# 2e. Render at 800x600 (4:3) -> scales cleanly (uniform 0.8x) to the 640x480 panel
-#     with no aspect distortion. Force via -DRES_800_600 to avoid include-order ambiguity.
+# 2f. Render at 800x600 (4:3) -> clean uniform 0.8x to 640x480. Forced via -DRES_800_600.
 sed -i 's|^#define RES_512_512|// #define RES_512_512|' etnk.h
 sed -i 's|^#define RES_800_600|// #define RES_800_600|' etnk.h
 grep -nE 'RES_(512_512|800_600)' etnk.h || true
