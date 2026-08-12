@@ -27,6 +27,10 @@ services:
     <<: *toolchain
     command: ["bash", "scripts/10-build-hello.sh"]
 
+  probe:
+    <<: *toolchain
+    command: ["bash", "scripts/50-build-probe.sh"]
+
   engine:
     <<: *toolchain
     command: ["bash", "scripts/30-build-engine.sh"]

@@ -39,11 +39,11 @@ else
   echo "WARN: data/datafile.sh not found - datafilebank.c cannot be generated"
 fi
 
-# 2e. Render at 512x512 (content size) instead of 800x600 so it fills the 640x480
-#     screen after scaling, instead of being pinned top-left. (verified in the sim)
+# 2e. Render at 800x600 (4:3) -> scales cleanly (uniform 0.8x) to the 640x480 panel
+#     with no aspect distortion. Force via -DRES_800_600 to avoid include-order ambiguity.
+sed -i 's|^#define RES_512_512|// #define RES_512_512|' etnk.h
 sed -i 's|^#define RES_800_600|// #define RES_800_600|' etnk.h
-sed -i 's|^/\* #define RES_512_512 \*/|#define RES_512_512|' etnk.h
-grep -nE 'RES_(512_512|800_600)' etnk.h
+grep -nE 'RES_(512_512|800_600)' etnk.h || true
 
 # 3. Compile: drop the bundled SDL2 gfx sources, add our shim, force-include it.
 #    SDL 1.2 + SDL_gfx come from the toolchain sysroot (device provides them at runtime).
@@ -60,7 +60,7 @@ SRCS="$(ls *.c | grep -vE '^(SDL2_gfxPrimitives|SDL2_rotozoom)\.c$')"
 
 echo "== Compiling (WIP: fix shim errors as they appear) =="
 set -x
-$CC -O2 -std=c99 -I. $SDL_CFLAGS \
+$CC -O2 -std=c99 -I. -DRES_800_600 $SDL_CFLAGS \
     -include "$ENGINE/sdl12_compat.h" \
     $SRCS \
     $SDL_LIBS -lSDL_gfx -lm \

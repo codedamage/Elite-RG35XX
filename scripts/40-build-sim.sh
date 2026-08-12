@@ -23,11 +23,12 @@ cd "$ENGINE"
 sed -i 's/event\.key\.repeat/0/g' *.c
 [ -f data/datafile.sh ] && bash data/datafile.sh > datafilebank.c
 
-# Switch the render size to match the content (512x512) instead of 800x600, so it
-# fills the screen after scaling. (RES_800_600 -> RES_512_512)
+# Aspect ratio: render at 800x600 (4:3) so it scales to 640x480 (4:3) as a clean
+# uniform 0.8x with no horizontal stretch. Disable both in the header and force
+# RES_800_600 via -D (below) to avoid include-order ambiguity.
+sed -i 's|^#define RES_512_512|// #define RES_512_512|' etnk.h
 sed -i 's|^#define RES_800_600|// #define RES_800_600|' etnk.h
-sed -i 's|^/\* #define RES_512_512 \*/|#define RES_512_512|' etnk.h
-grep -nE 'RES_(512_512|800_600)' etnk.h
+grep -nE 'RES_(512_512|800_600)' etnk.h || true
 
 # SIM debug: log when the intro-relevant kbd_* flags go non-zero (added after they're set)
 sed -i 's|kbd_space_pressed = key\[KEY_SPACE\];|kbd_space_pressed = key[KEY_SPACE]; if(kbd_y_pressed+kbd_n_pressed+kbd_space_pressed) fprintf(stderr,"DBG-KBD y=%d n=%d space=%d\\n",kbd_y_pressed,kbd_n_pressed,kbd_space_pressed);|' keyboard.c
@@ -40,7 +41,7 @@ grep -c 'DBG-STATE' main.c
 # 3. Native x86 build with SIM_BUILD (frame capture + scripted input in the shim)
 SRCS="$(ls *.c | grep -vE '^(SDL2_gfxPrimitives|SDL2_rotozoom)\.c$')"
 echo "== Building simulator (native x86, SDL 1.2) =="
-gcc -O2 -std=c99 -I. -DSIM_BUILD $(sdl-config --cflags) \
+gcc -O2 -std=c99 -I. -DSIM_BUILD -DRES_800_600 $(sdl-config --cflags) \
     -include "$ENGINE/sdl12_compat.h" \
     $SRCS \
     $(sdl-config --libs) -lSDL_gfx -lm \

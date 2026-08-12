@@ -137,7 +137,10 @@ int SDLc_RenderCopy(SDL_Renderer *r,SDL_Texture *t,const SDL_Rect *src,const SDL
         fprintf(stderr,"SHIM: present scale tex=%dx%d -> screen=%dx%d\n",
                 sw,sh,dw,dh);
     }
-    SDL_Surface *z = zoomSurface(t, (double)dw/sw, (double)dh/sh, SMOOTHING_OFF);
+    /* SMOOTHING_ON (bilinear): when downscaling 800x600 -> 640x480, nearest-neighbour
+     * randomly drops 1px lines (view borders, HUD rules); bilinear keeps them (dimmed)
+     * and looks consistent. */
+    SDL_Surface *z = zoomSurface(t, (double)dw/sw, (double)dh/sh, SMOOTHING_ON);
     if(!z) return -1;
     SDL_SetAlpha(z, 0, 255);                 /* opaque copy: don't alpha-blend onto screen */
     SDL_Rect d2; d2.x = dst?dst->x:0; d2.y = dst?dst->y:0; d2.w=0; d2.h=0;
