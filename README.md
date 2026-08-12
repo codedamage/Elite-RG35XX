@@ -26,5 +26,6 @@ Elite © Bell & Braben. *The New Kind* is a fan reimplementation with a murky hi
 that isn't clearly free.
 
 ## Status
-🟢 **Pipeline proven on hardware** (task 02 ✅ — `hello` cross-built and ran on the device).
-Next: task 04 — build the SDL 1.2-backported engine. See MASTER + tasks.
+🟢 **Engine builds** (task 04 ✅ — `EliteTNK` cross-compiles via the SDL2→1.2 shim; ELF32
+ARM/uClibc/armv5te, ABI PASS, self-contained). Pipeline proven on hardware (task 02 ✅).
+Next: task 05 — first boot / display at 640×480. See MASTER + tasks.

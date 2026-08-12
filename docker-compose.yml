@@ -30,3 +30,14 @@ services:
   engine:
     <<: *toolchain
     command: ["bash", "scripts/30-build-engine.sh"]
+
+  # Headless x86 simulator (own image with native SDL 1.2) - renders offscreen,
+  # dumps sim/*.png so we can see the display without the device.
+  sim:
+    build:
+      context: .
+      dockerfile: Dockerfile.sim
+    working_dir: /src
+    volumes:
+      - .:/src
+    command: ["bash", "scripts/40-build-sim.sh"]

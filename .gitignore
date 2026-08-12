@@ -28,3 +28,7 @@ port/**/save/
 .DS_Store
 Thumbs.db
 /tasks
+
+# Simulator output
+sim/*.bmp
+sim/*.png

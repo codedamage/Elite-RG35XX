@@ -1,0 +1,10 @@
+# Headless x86 simulator image: native SDL 1.2 + SDL_gfx so we can build & run the
+# SAME port code (our shim) on the desktop, render offscreen, and dump frames.
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential git ca-certificates \
+        libsdl1.2-dev libsdl-gfx1.2-dev \
+        imagemagick \
+ && rm -rf /var/lib/apt/lists/*
+WORKDIR /src

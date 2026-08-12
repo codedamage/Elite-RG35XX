@@ -26,6 +26,25 @@ printf '#include "SDL_rotozoom.h"\n'      > "$ENGINE/SDL2_rotozoom.h"
 
 cd "$ENGINE"
 
+# 2c. Source tweaks that can't be macro'd:
+#     SDL 1.2's SDL_KeyboardEvent has no 'repeat' field -> treat every keydown as fresh.
+sed -i 's/event\.key\.repeat/0/g' *.c
+
+# 2d. Generate the embedded data bank (bmp/wav -> C arrays). The fork links
+#     datafile_filenames/_sizes/_storage from this GENERATED file (not in git).
+if [ -f data/datafile.sh ]; then
+  bash data/datafile.sh > datafilebank.c
+  echo "Generated datafilebank.c ($(wc -c < datafilebank.c) bytes)"
+else
+  echo "WARN: data/datafile.sh not found - datafilebank.c cannot be generated"
+fi
+
+# 2e. Render at 512x512 (content size) instead of 800x600 so it fills the 640x480
+#     screen after scaling, instead of being pinned top-left. (verified in the sim)
+sed -i 's|^#define RES_800_600|// #define RES_800_600|' etnk.h
+sed -i 's|^/\* #define RES_512_512 \*/|#define RES_512_512|' etnk.h
+grep -nE 'RES_(512_512|800_600)' etnk.h
+
 # 3. Compile: drop the bundled SDL2 gfx sources, add our shim, force-include it.
 #    SDL 1.2 + SDL_gfx come from the toolchain sysroot (device provides them at runtime).
 SDL_CFLAGS="$( (sdl-config --cflags) 2>/dev/null || echo '')"
@@ -51,4 +70,7 @@ set +x
 echo
 echo "Built: $OUT"
 sh "$ROOT/scripts/check-abi.sh" "$OUT" || true
-echo "Then stage data:  cp -r $ENGINE/data $ROOT/port/Elite/  (only if free to include)"
+echo
+echo "EliteTNK is SELF-CONTAINED (bmp/wav embedded; elite.dat load is #if 0 dead code)."
+echo "Deploy: copy BOTH  port/Elite.sh  and  port/Elite/  into the SD card's Roms/PORTS/,"
+echo "then launch 'Elite' from Garlic -> Ports. Config/saves write into the Elite/ folder."
