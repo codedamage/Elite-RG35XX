@@ -33,6 +33,13 @@ printf '#include "SDL_rotozoom.h"\n'      > SDL2_rotozoom.h
 # 2d. Source tweaks:
 sed -i 's/event\.key\.repeat/0/g' *.c                            # no 'repeat' field in SDL 1.2
 sed -i '/puts("gfx_update_screen() is called!")/d' sdl.c         # per-frame log I/O = slow
+# Allegro leftovers: acquire/release map to bitmap locking, unneeded for our software
+# surface. Stubs are fine, but their puts() fire every frame -> strip the spam.
+sed -i '/puts("FIXME: gfx_acquire_screen() is not implemented")/d' sdl.c
+sed -i '/puts("FIXME: gfx_release_screen() is not implemented")/d' sdl.c
+# The fork stubs gfx_request_file (file selector) -> save/load always abort. Make it
+# succeed with the default filename so Save/Load Commander actually work.
+sed -i '/FIXME: add file selector code/{n;s/return 0;/return 1;/}' sdl.c
 
 # 2e. Embedded data bank (bmp/wav -> C arrays; not in git).
 if [ -f data/datafile.sh ]; then

@@ -6,10 +6,15 @@ gamedir="$progdir/Elite"
 cd "$gamedir" || exit 1
 
 export LD_LIBRARY_PATH="$gamedir/libs:$LD_LIBRARY_PATH"
-export HOME="$gamedir"           # keep saves/config/logs local to the game folder
+export HOME="$gamedir"           # keep saves/config local to the game folder
+
+# Logging is OFF by default: the game/shim print a lot, and writing that to the SD
+# card every frame slows things down and wears the card. To capture a log for
+# debugging, drop an empty file named "DEBUG" into the Elite/ folder.
+if [ -f ./DEBUG ]; then OUT="log.txt"; else OUT="/dev/null"; fi
 
 if [ -x ./EliteTNK ]; then
-    ./EliteTNK > log.txt 2>&1
+    ./EliteTNK > "$OUT" 2>&1
 elif [ -x ./hello ]; then
     ./hello > hello.log 2>&1     # task 02 pipeline test
 fi

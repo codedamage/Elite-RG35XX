@@ -23,6 +23,7 @@ printf '#include "SDL_rotozoom.h"\n'      > SDL2_rotozoom.h
 : > SDL2_gfxPrimitives_font.h
 sed -i 's/event\.key\.repeat/0/g' *.c
 sed -i '/puts("gfx_update_screen() is called!")/d' sdl.c
+sed -i '/FIXME: add file selector code/{n;s/return 0;/return 1;/}' sdl.c   # enable save/load
 [ -f data/datafile.sh ] && bash data/datafile.sh > datafilebank.c
 
 # Aspect ratio: render at 800x600 (4:3) so it scales to 640x480 (4:3) as a clean

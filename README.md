@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/OS-GarlicOS-brightgreen?style=flat-square" alt="OS"/>
   <img src="https://img.shields.io/badge/ABI-armv5te%20·%20uClibc%20·%20soft--float-blue?style=flat-square" alt="ABI"/>
   <img src="https://img.shields.io/badge/engine%20build-passing-brightgreen?style=flat-square" alt="build"/>
-  <img src="https://img.shields.io/badge/status-task%2005%20%E2%80%94%20display-yellow?style=flat-square" alt="status"/>
+  <img src="https://img.shields.io/badge/status-playable%20%E2%80%94%20task%2008%20packaging-yellow?style=flat-square" alt="status"/>
 </p>
 
 <p align="center">
@@ -46,12 +46,15 @@
 | 02 | Hello-world pipeline test | ✅ |
 | 03 | Dependencies | ✅ |
 | 04 | Build the engine (`EliteTNK` — armv5te/uClibc, ABI pass) | ✅ |
-| 05 | Display & scaling — 640×480 | 🔄 |
-| 06 | Input mapping — gamepad controls | ⬜ |
-| 07 | Audio | ⬜ |
+| 05 | Display & scaling — 640×480 | ✅ |
+| 06 | Input mapping — gamepad controls | ✅ |
+| 07 | Audio | ✅ |
 | 08 | Packaging & deploy — GarlicOS Ports menu | ⬜ |
 | 09 | Testing (ABI, smoke, perf, input, memory, save) | ⬜ |
 | 10 | Polish (saves, sleep/wake, splash screen) | ⬜ |
+
+**Known issues (→ task 10):** the game-over screen doesn't fully clear each frame, so the
+attacking ship and its lasers leave trails (cosmetic; death screen only).
 
 ---
 
@@ -135,21 +138,19 @@ Full mapping: **[docs/CONTROLS.md](docs/CONTROLS.md)**
 
 | Action | Button |
 |:-------|:------:|
-| Pitch Up / Down | D-pad ↑ / ↓ |
-| Roll Left / Right | D-pad ← / → |
-| Accelerate | R |
+| Pitch — dive / climb | D-pad ↑ / ↓ |
+| Roll — left / right | D-pad ← / → |
+| Fire laser · confirm | A |
+| Accelerate | B / R |
 | Decelerate | L |
-| Fire Laser | A |
-| Target Missile | X |
-| Fire Missile | Y |
-| ECM | L + R |
-| Hyperspace / Jump | Start |
-| Launch (docked) | Select + D-pad Up |
-| Views (F1–F4) | Select + D-pad |
-| Charts / Screens (F5–F11) | Select + A / B / X / Y / L / R |
-| Combat actions (missile, ECM, bomb…) | Start + face button |
-| Pause / Resume | Menu |
-| Options / Save | Start + D-pad Right |
+| New / Load commander *(intro only)* | X / Y |
+| Launch (docked) · Views F1–F4 | Select + D-pad |
+| Charts & screens F5–F10 | Select + A / B / X / Y / R / L |
+| Fire missile · target · un-arm | Start + A / B / X |
+| ECM · hyperspace · in-system jump | Start + Y / R / L |
+| Energy bomb · docking comp. · scanner zoom | Start + ↑ / ↓ / ← |
+| Options / Save / Load | Start + D-pad → |
+| Quit to Ports menu | Menu |
 
 ---
 

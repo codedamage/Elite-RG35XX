@@ -39,7 +39,10 @@ typedef int SDL_AudioDeviceID;
 #define SDL_RENDERER_TARGETTEXTURE  0
 
 #ifndef SDLK_STOP
-#define SDLK_STOP  SDLK_UNKNOWN
+/* Must be NON-ZERO and unused: the fork's keydefs[] is null-terminated, and a 0 here
+ * (SDLK_UNKNOWN) becomes a false terminator that hides every key after it (UP, y, x,
+ * z, t, u, TAB...). The device never sends this code, so any unused value is fine. */
+#define SDLK_STOP  0x7FFF
 #endif
 
 /* ARGB8888 channel masks (little-endian pixel 0xAARRGGBB) - used by the shim .c */

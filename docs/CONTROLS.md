@@ -16,12 +16,12 @@ L2/R2 = analog axes 2 / 5
 |:----------------|:---------:|:-----------------------------------------|
 | D-pad Up / Down | ↑ / ↓     | Pitch                                    |
 | D-pad Left / Right | ← / →  | Roll                                     |
-| A               | `a`       | Fire laser                               |
+| A               | `a` / Enter | Fire laser · **confirm** in menus      |
 | B / R1 / R2     | Space     | Accelerate                               |
 | L1 / L2         | `/`       | Decelerate                               |
 | X               | `n`       | New commander *(intro only)*             |
 | Y               | `y`       | Load commander *(intro only)*            |
-| Menu            | `p`       | Pause / Resume                           |
+| Menu            | —         | **Quit** to the Ports menu               |
 
 ---
 
@@ -61,7 +61,14 @@ L2/R2 = analog axes 2 / 5
 
 ## System
 
-- **Quit**: GarlicOS system menu (SIGTERM → clean exit).
+- **Quit**: press **Menu** (clean exit to the Ports menu). GarlicOS SIGTERM also handled.
+
+## Save / Load a commander
+The fork's file picker isn't implemented, so we save/load a single fixed slot (`jameson.nkc`):
+- **Save** (while docked): **Start + D-pad Right** (Options) → highlight *Save Commander* with the
+  D-pad → **A** (confirm). Writes to the `Elite/` folder on the card.
+- **Load**: at the first intro screen ("Load commander? Y/N") press **Y**, then **A** to confirm.
+- So the loop is: play → dock → Options → Save → next session, intro → **Y** to resume that commander.
 
 ---
 

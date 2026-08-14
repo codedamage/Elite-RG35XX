@@ -310,7 +310,6 @@ static int base_tap_sym(int b){     /* one-shots */
     switch(b){
         case BTN_X:    return SDLK_n;   /* intro1: new commander (harmless in flight) */
         case BTN_Y:    return SDLK_y;   /* intro1: load commander                     */
-        case BTN_MENU: return SDLK_p;   /* pause / resume                             */
         default: return 0;
     }
 }
@@ -371,7 +370,8 @@ int SDLc_PollEvent(SDL_Event *ev){
         static const struct { long f; int sym; int down; } script[] = {
             { 40,SDLK_n,1},    {130,SDLK_n,0},      /* intro1: N = new commander -> break */
             {170,SDLK_SPACE,1},{250,SDLK_SPACE,0},  /* intro2: SPACE -> start game        */
-            {300,SDLK_F1,1},   {430,SDLK_F1,0},     /* docked: hold F1 long -> launch      */
+            {280,SDLK_F1,1},   {305,SDLK_F1,0},     /* launch                              */
+            {330,SDLK_UP,1},   {430,SDLK_UP,0},     /* TEST: hold UP (dive) in flight      */
             {-1,0,0}
         };
         if(script[si].f>=0 && g_sim_frame>=script[si].f){
@@ -416,12 +416,14 @@ int SDLc_PollEvent(SDL_Event *ev){
                 fprintf(stderr,"JOYBTN #%d %s\n", b, down?"down":"up");
                 if(b==BTN_SELECT){ s_sel=down;   if(q_pop(ev)) return 1; continue; }
                 if(b==BTN_START ){ s_start=down; if(q_pop(ev)) return 1; continue; }
+                if(b==BTN_MENU){ if(down){ SDL_Quit(); exit(0); } continue; } /* Menu = quit to Ports */
                 if(down){
                     if(s_sel){ int m=sel_sym(b);   if(m) q_tap(m); }       /* Select layer */
                     else if(s_start){ int m=start_sym(b); if(m) q_tap(m); }/* Start layer  */
                     else {
                         int h=base_hold_sym(b);
-                        if(h){ q_push_key(1,h); if(b>=0&&b<32) s_btn_key[b]=h; }
+                        if(h){ q_push_key(1,h); if(b>=0&&b<32) s_btn_key[b]=h;
+                               if(b==BTN_A) q_tap(SDLK_RETURN); }          /* A also = menu confirm */
                         else { int t=base_tap_sym(b); if(t) q_tap(t); }
                     }
                 } else if(b>=0 && b<32 && s_btn_key[b]){
