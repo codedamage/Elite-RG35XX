@@ -25,12 +25,12 @@
 <p align="center">
 <table>
 <tr>
-  <td align="center"><img src="sim/frame_0002.png" width="310" alt="Title Screen"/><br/><sub>Title screen / intro</sub></td>
-  <td align="center"><img src="sim/frame_0160.png" width="310" alt="Cobra Mk III"/><br/><sub>Ship intro parade — Cobra Mk III</sub></td>
+  <td align="center"><img src="docs/screenshots/title.png" width="310" alt="Title Screen"/><br/><sub>Title screen / intro</sub></td>
+  <td align="center"><img src="docs/screenshots/ship-parade.png" width="310" alt="Cobra Mk III"/><br/><sub>Ship intro parade — Cobra Mk III</sub></td>
 </tr>
 <tr>
-  <td align="center"><img src="sim/frame_0340.png" width="310" alt="Planet Approach"/><br/><sub>Front view — planet approach</sub></td>
-  <td align="center"><img src="sim/frame_0220.png" width="310" alt="Commander Status"/><br/><sub>Commander Jameson status screen</sub></td>
+  <td align="center"><img src="docs/screenshots/planet.png" width="310" alt="Planet Approach"/><br/><sub>Front view — planet approach</sub></td>
+  <td align="center"><img src="docs/screenshots/commander.png" width="310" alt="Commander Status"/><br/><sub>Commander Jameson status screen</sub></td>
 </tr>
 </table>
 </p>
