@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200" viewBox="0 0 800 200">
+
+  <!-- Background -->
+  <rect width="800" height="200" fill="#080808"/>
+
+  <!-- Stars — left / ship area -->
+  <circle cx="12"  cy="18"  r="1"   fill="white" opacity="0.7"/>
+  <circle cx="34"  cy="7"   r="1.5" fill="white" opacity="0.9"/>
+  <circle cx="58"  cy="14"  r="1"   fill="white" opacity="0.5"/>
+  <circle cx="82"  cy="25"  r="1"   fill="white" opacity="0.8"/>
+  <circle cx="108" cy="9"   r="2"   fill="white" opacity="0.6"/>
+  <circle cx="135" cy="20"  r="1"   fill="white" opacity="0.7"/>
+  <circle cx="163" cy="12"  r="1"   fill="white" opacity="0.9"/>
+  <circle cx="192" cy="8"   r="1"   fill="white" opacity="0.5"/>
+  <circle cx="218" cy="22"  r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="25"  cy="48"  r="1"   fill="white" opacity="0.6"/>
+  <circle cx="52"  cy="65"  r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="74"  cy="38"  r="1"   fill="white" opacity="0.7"/>
+  <circle cx="18"  cy="128" r="1"   fill="white" opacity="0.6"/>
+  <circle cx="42"  cy="148" r="1"   fill="white" opacity="0.5"/>
+  <circle cx="67"  cy="138" r="1.5" fill="white" opacity="0.7"/>
+  <circle cx="92"  cy="158" r="1"   fill="white" opacity="0.5"/>
+  <circle cx="118" cy="130" r="1"   fill="white" opacity="0.6"/>
+  <circle cx="145" cy="155" r="1"   fill="white" opacity="0.4"/>
+  <circle cx="170" cy="145" r="1.5" fill="white" opacity="0.6"/>
+  <circle cx="196" cy="162" r="1"   fill="white" opacity="0.5"/>
+  <circle cx="220" cy="132" r="1"   fill="white" opacity="0.7"/>
+  <circle cx="10"  cy="178" r="1"   fill="white" opacity="0.5"/>
+  <circle cx="38"  cy="188" r="1"   fill="white" opacity="0.6"/>
+  <circle cx="64"  cy="175" r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="90"  cy="191" r="1"   fill="white" opacity="0.5"/>
+  <circle cx="118" cy="182" r="1"   fill="white" opacity="0.6"/>
+  <circle cx="145" cy="193" r="1"   fill="white" opacity="0.4"/>
+  <circle cx="172" cy="182" r="1"   fill="white" opacity="0.5"/>
+  <circle cx="200" cy="176" r="1.5" fill="white" opacity="0.6"/>
+
+  <!-- Stars — right / text area (sparse) -->
+  <circle cx="285" cy="20"  r="1"   fill="white" opacity="0.3"/>
+  <circle cx="352" cy="188" r="1"   fill="white" opacity="0.3"/>
+  <circle cx="427" cy="12"  r="1"   fill="white" opacity="0.35"/>
+  <circle cx="508" cy="182" r="1"   fill="white" opacity="0.3"/>
+  <circle cx="582" cy="22"  r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="643" cy="175" r="1"   fill="white" opacity="0.3"/>
+  <circle cx="718" cy="30"  r="1"   fill="white" opacity="0.35"/>
+  <circle cx="775" cy="168" r="1"   fill="white" opacity="0.3"/>
+  <circle cx="792" cy="88"  r="1.5" fill="white" opacity="0.4"/>
+  <circle cx="658" cy="95"  r="1"   fill="white" opacity="0.25"/>
+  <circle cx="750" cy="58"  r="1"   fill="white" opacity="0.3"/>
+  <circle cx="783" cy="138" r="1"   fill="white" opacity="0.35"/>
+
+  <!-- ── Cobra Mk III wireframe ────────────────────────────── -->
+  <!--   Centered at (118, 100).  Nose at top, engines at bottom. -->
+  <g transform="translate(118,100)" stroke="#22ee55" fill="none">
+
+    <!-- Outer hull -->
+    <polygon points="0,-62 -22,-12 -68,24 -28,62 -10,68 10,68 28,62 68,24 22,-12"
+             stroke-width="1.6"/>
+
+    <!-- Face cross-lines (interior wireframe) -->
+    <line x1="0"   y1="-62" x2="0"  y2="68"  stroke-width="0.8" opacity="0.4"/>
+    <line x1="-22" y1="-12" x2="22" y2="-12" stroke-width="0.8" opacity="0.4"/>
+    <line x1="-68" y1="24"  x2="68" y2="24"  stroke-width="0.8" opacity="0.4"/>
+    <line x1="-28" y1="62"  x2="28" y2="62"  stroke-width="0.8" opacity="0.4"/>
+
+    <!-- Wing-face diagonals -->
+    <line x1="0"  y1="-62" x2="-68" y2="24" stroke-width="0.7" opacity="0.25"/>
+    <line x1="0"  y1="-62" x2="68"  y2="24" stroke-width="0.7" opacity="0.25"/>
+    <line x1="-22" y1="-12" x2="-28" y2="62" stroke-width="0.7" opacity="0.2"/>
+    <line x1="22"  y1="-12" x2="28"  y2="62" stroke-width="0.7" opacity="0.2"/>
+
+    <!-- Cockpit canopy -->
+    <ellipse cx="0" cy="-28" rx="12" ry="8" stroke-width="1.2" opacity="0.85"/>
+
+    <!-- Engine exhaust dots -->
+    <circle cx="-19" cy="68" r="3" stroke-width="1" opacity="0.7"/>
+    <circle cx="19"  cy="68" r="3" stroke-width="1" opacity="0.7"/>
+  </g>
+
+  <!-- Vertical divider -->
+  <line x1="235" y1="22" x2="235" y2="178"
+        stroke="#22ee55" stroke-width="0.5" opacity="0.3" stroke-dasharray="3,6"/>
+
+  <!-- ── Text ────────────────────────────────────────────── -->
+
+  <text x="517" y="83"
+        text-anchor="middle"
+        font-family="'Courier New', Courier, monospace"
+        font-size="52" font-weight="bold"
+        fill="#ffaa00"
+        letter-spacing="-1">---ELITE---</text>
+
+  <text x="517" y="119"
+        text-anchor="middle"
+        font-family="'Courier New', Courier, monospace"
+        font-size="20"
+        fill="#ffaa00"
+        letter-spacing="5">THE NEW KIND</text>
+
+  <text x="517" y="159"
+        text-anchor="middle"
+        font-family="'Courier New', Courier, monospace"
+        font-size="13"
+        fill="#00bbdd"
+        letter-spacing="1">&#x2605;  Anbernic RG35XX Port  &#xB7;  GarlicOS  &#xB7;  armv5te  &#x2605;</text>
+
+  <!-- Corner brackets -->
+  <path d="M 8 8 L 8 22 M 8 8 L 22 8"     stroke="#22ee55" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M 792 8 L 792 22 M 792 8 L 778 8" stroke="#22ee55" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M 8 192 L 8 178 M 8 192 L 22 192"   stroke="#22ee55" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M 792 192 L 792 178 M 792 192 L 778 192" stroke="#22ee55" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+</svg>
